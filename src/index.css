@@ -1,0 +1,16 @@
+@import "tailwindcss";
+
+@theme {
+  --font-serif: 'Fraunces', serif;
+  --font-sans: 'Inter', sans-serif;
+
+  --color-rafet-blanc: #FFFFFF;
+  --color-rafet-beige: #D2C3A5;
+  --color-rafet-brun: #4C352B;
+  --color-rafet-noir: #000000;
+  --color-rafet-gris: #8A7A6D;
+}
+
+body {
+  font-family: var(--font-sans);
+}
