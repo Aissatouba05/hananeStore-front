@@ -11,7 +11,8 @@ export default function NewArrivals() {
 
   const scroll = (direction) => {
     if (scrollRef.current) {
-      scrollRef.current.scrollBy({ left: direction * 260, behavior: 'smooth' })
+      const largeur = scrollRef.current.children[0]?.offsetWidth || 260
+      scrollRef.current.scrollBy({ left: direction * (largeur + 24), behavior: 'smooth' })
     }
   }
 
@@ -37,9 +38,15 @@ export default function NewArrivals() {
         </div>
       </div>
 
-      <div ref={scrollRef} className="flex gap-6 overflow-x-auto scroll-smooth pb-2 no-scrollbar">
+      <div
+        ref={scrollRef}
+        className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 no-scrollbar"
+      >
         {nouveautes.map((produit) => (
-          <div key={produit.id} className="flex-shrink-0 w-56">
+          <div
+            key={produit.id}
+            className="flex-shrink-0 w-full sm:w-56 snap-start"
+          >
             <ProductCard produit={{ ...produit, image: produit.images[0] }} />
           </div>
         ))}

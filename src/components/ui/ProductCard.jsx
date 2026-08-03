@@ -23,8 +23,8 @@ export default function ProductCard({ produit, taille = 'normal', delai = 0 }) {
   }, [])
 
   return (
-    <Link ref={ref} to={`/produit/${produit.id}`} className="group h-full flex flex-col">
-      <div className="relative flex-1 min-h-[220px] bg-rafet-beige rounded-md overflow-hidden">
+    <Link ref={ref} to={`/produit/${produit.id}`} className="group h-full flex flex-col rounded-md overflow-hidden">
+      <div className="relative flex-1 min-h-[220px] bg-rafet-beige">
         {produit.image && (
           <img
             src={produit.image}
@@ -76,16 +76,18 @@ export default function ProductCard({ produit, taille = 'normal', delai = 0 }) {
           />
         </button>
 
-        <div className="absolute left-0 right-0 bottom-0 bg-white/95 text-center py-2.5 text-[10px] tracking-[2px] text-rafet-brun opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center justify-center gap-2">
-          <FontAwesomeIcon icon={faEye} />
-          APERÇU RAPIDE
+        <div className="absolute bottom-3 right-3 bg-white text-rafet-brun text-[10px] tracking-widest px-3 py-2 rounded-sm opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-1.5 shadow-sm">
+          <FontAwesomeIcon icon={faEye} className="text-[10px]" />
+          APERÇU
         </div>
       </div>
 
-      <p className="text-sm text-rafet-noir mt-3 mb-1 transition-colors duration-200 group-hover:text-rafet-brun">
-        {produit.nom}
-      </p>
-      <p className="text-xs text-rafet-gris">{produit.prix.toLocaleString('fr-FR')} FCFA</p>
+      <div className="bg-rafet-beige px-4 py-3">
+        <p className="text-sm text-rafet-noir mb-1 transition-colors duration-200 group-hover:text-rafet-brun">
+          {produit.nom}
+        </p>
+        <p className="text-xs text-rafet-brun font-medium">{produit.prix.toLocaleString('fr-FR')} FCFA</p>
+      </div>
     </Link>
   )
 }
