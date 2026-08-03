@@ -76,7 +76,7 @@ export default function ProductCard({ produit, taille = 'normal', delai = 0 }) {
           />
         </button>
 
-        <div className="absolute bottom-3 right-3 bg-white text-rafet-brun text-[10px] tracking-widest px-3 py-2 rounded-sm opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-1.5 shadow-sm">
+        <div className="absolute bottom-3 left-3 bg-white text-rafet-brun text-[10px] tracking-widest px-3 py-2 rounded-sm opacity-0 translate-y-2 group-hover:opacity-100 group-hover:translate-y-0 transition-all duration-300 flex items-center gap-1.5 shadow-sm">
           <FontAwesomeIcon icon={faEye} className="text-[10px]" />
           APERÇU
         </div>
