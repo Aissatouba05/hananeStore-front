@@ -14,7 +14,7 @@ export default function Header() {
   const [menuOuvert, setMenuOuvert] = useState(false)
 
   return (
-    <header className="bg-rafet-beige border-b border-rafet-brun/20 relative">
+    <header className="bg-rafet-beige border-b border-rafet-brun/20">
       <div className="flex items-center justify-between px-6 md:px-8 py-4">
         <Link to="/" className="font-serif text-xl tracking-widest text-rafet-noir">
           HananeStore

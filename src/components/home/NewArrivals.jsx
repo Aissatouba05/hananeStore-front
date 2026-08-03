@@ -11,7 +11,7 @@ export default function NewArrivals() {
 
   const scroll = (direction) => {
     if (scrollRef.current) {
-      const largeur = scrollRef.current.children[0]?.offsetWidth || 260
+      const largeur = scrollRef.current.children[0]?.offsetWidth || 280
       scrollRef.current.scrollBy({ left: direction * (largeur + 24), behavior: 'smooth' })
     }
   }
@@ -45,7 +45,7 @@ export default function NewArrivals() {
         {nouveautes.map((produit) => (
           <div
             key={produit.id}
-            className="flex-shrink-0 w-full sm:w-56 snap-start"
+            className="flex-shrink-0 w-full sm:w-80 snap-start"
           >
             <ProductCard produit={{ ...produit, image: produit.images[0] }} />
           </div>
