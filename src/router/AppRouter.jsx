@@ -5,6 +5,7 @@ import Catalogue from '../pages/Catalogue'
 import ProduitDetail from '../pages/ProduitDetail'
 import Panier from '../pages/Panier'
 import Checkout from '../pages/Checkout'
+import Favoris from '../pages/Favoris'
 import DashboardAdmin from '../pages/admin/DashboardAdmin'
 
 export default function AppRouter() {
@@ -17,6 +18,7 @@ export default function AppRouter() {
           <Route path="/produit/:id" element={<ProduitDetail />} />
           <Route path="/panier" element={<Panier />} />
           <Route path="/checkout" element={<Checkout />} />
+          <Route path="/favoris" element={<Favoris />} />
           <Route path="/admin" element={<DashboardAdmin />} />
         </Routes>
       </Layout>

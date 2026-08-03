@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faXmark, faMagnifyingGlass, faBagShopping } from '@fortawesome/free-solid-svg-icons'
+import { faBars, faXmark, faMagnifyingGlass, faBagShopping, faHeart } from '@fortawesome/free-solid-svg-icons'
 
 const navLinks = [
   { label: 'SACS & CHAUSSURES', to: '/catalogue?categorie=sacs' },
@@ -32,6 +32,9 @@ export default function Header() {
           <button aria-label="Recherche" className="hidden md:inline">
             <FontAwesomeIcon icon={faMagnifyingGlass} />
           </button>
+          <Link to="/favoris" aria-label="Favoris" className="hidden md:inline-block">
+            <FontAwesomeIcon icon={faHeart} />
+          </Link>
           <Link to="/panier" aria-label="Panier" className="relative hidden md:inline-block">
             <FontAwesomeIcon icon={faBagShopping} />
             <span className="absolute -top-2 -right-2 bg-rafet-brun text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
@@ -48,7 +51,6 @@ export default function Header() {
         </div>
       </div>
 
-      {/* Menu mobile plein écran — fond brun cuir */}
       {menuOuvert && (
         <div className="fixed inset-0 bg-rafet-brun z-50 flex flex-col animate-[fadeIn_0.25s_ease]">
           <div className="flex items-center justify-between px-6 py-5">
@@ -79,6 +81,9 @@ export default function Header() {
             <button aria-label="Recherche" className="text-rafet-beige text-lg">
               <FontAwesomeIcon icon={faMagnifyingGlass} />
             </button>
+            <Link to="/favoris" aria-label="Favoris" className="text-rafet-beige text-lg">
+              <FontAwesomeIcon icon={faHeart} />
+            </Link>
             <Link to="/panier" aria-label="Panier" className="text-rafet-beige text-lg relative">
               <FontAwesomeIcon icon={faBagShopping} />
               <span className="absolute -top-2 -right-2 bg-white text-rafet-brun text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
