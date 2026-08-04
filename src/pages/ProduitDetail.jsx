@@ -1,19 +1,22 @@
 import { useState } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faStar, faHeart, faMinus, faPlus } from '@fortawesome/free-solid-svg-icons'
+import { faStar, faHeart, faMinus, faPlus, faCheck } from '@fortawesome/free-solid-svg-icons'
 import { faStar as faStarOutline } from '@fortawesome/free-regular-svg-icons'
 import { getProduitById } from '../data/produits'
+import { usePanier } from '../context/PanierContext'
 import Button from '../components/ui/Button'
 
 export default function ProduitDetail() {
   const { id } = useParams()
   const produit = getProduitById(id)
+  const { ajouterAuPanier } = usePanier()
 
   const [imageActive, setImageActive] = useState(0)
   const [couleurActive, setCouleurActive] = useState(0)
   const [tailleActive, setTailleActive] = useState(0)
   const [quantite, setQuantite] = useState(1)
+  const [ajoute, setAjoute] = useState(false)
 
   if (!produit) {
     return (
@@ -28,9 +31,14 @@ export default function ProduitDetail() {
 
   const etoiles = Math.round(produit.note)
 
+  const handleAjouterAuPanier = () => {
+    ajouterAuPanier(produit, produit.couleurs[couleurActive].nom, produit.tailles[tailleActive], quantite)
+    setAjoute(true)
+    setTimeout(() => setAjoute(false), 2000)
+  }
+
   return (
     <div className="px-6 md:px-12 py-8">
-      {/* Fil d'ariane */}
       <div className="text-xs text-rafet-gris mb-8 flex items-center gap-2">
         <Link to="/" className="hover:text-rafet-brun">Accueil</Link>
         <span>/</span>
@@ -42,7 +50,6 @@ export default function ProduitDetail() {
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
-        {/* Galerie */}
         <div className="flex gap-4">
           <div className="flex flex-col gap-3">
             {produit.images.map((img, i) => (
@@ -66,7 +73,6 @@ export default function ProduitDetail() {
           </div>
         </div>
 
-        {/* Infos */}
         <div>
           <h1 className="font-serif text-2xl md:text-3xl text-rafet-noir mb-3">{produit.nom}</h1>
           <p className="text-xl text-rafet-brun mb-4">{produit.prix.toLocaleString('fr-FR')} FCFA</p>
@@ -80,7 +86,6 @@ export default function ProduitDetail() {
             <span className="text-xs text-rafet-gris">{produit.nombreAvis} avis</span>
           </div>
 
-          {/* Couleurs */}
           <div className="mb-6">
             <p className="text-sm text-rafet-noir mb-3">
               Couleur : <span className="text-rafet-gris">{produit.couleurs[couleurActive].nom}</span>
@@ -100,7 +105,6 @@ export default function ProduitDetail() {
             </div>
           </div>
 
-          {/* Tailles */}
           {produit.tailles[0] !== 'Unique' && (
             <div className="mb-6">
               <p className="text-sm text-rafet-noir mb-3">Taille</p>
@@ -122,7 +126,6 @@ export default function ProduitDetail() {
             </div>
           )}
 
-          {/* Quantité */}
           <div className="mb-8">
             <p className="text-sm text-rafet-noir mb-3">Quantité</p>
             <div className="flex items-center gap-4 border border-rafet-beige w-fit">
@@ -144,9 +147,21 @@ export default function ProduitDetail() {
             </div>
           </div>
 
-          {/* Actions */}
           <div className="flex gap-3 mb-10">
-            <Button variant="brun" className="flex-1">AJOUTER AU PANIER</Button>
+            <Button
+              variant="brun"
+              className="flex-1 flex items-center justify-center gap-2"
+              onClick={handleAjouterAuPanier}
+            >
+              {ajoute ? (
+                <>
+                  <FontAwesomeIcon icon={faCheck} />
+                  AJOUTÉ AU PANIER
+                </>
+              ) : (
+                'AJOUTER AU PANIER'
+              )}
+            </Button>
             <button
               aria-label="Ajouter aux favoris"
               className="w-12 h-12 border border-rafet-beige flex items-center justify-center text-rafet-brun hover:bg-rafet-beige transition-colors"
@@ -155,7 +170,6 @@ export default function ProduitDetail() {
             </button>
           </div>
 
-          {/* Description */}
           <div className="border-t border-rafet-beige pt-6">
             <p className="text-sm text-rafet-noir mb-3 font-medium">Description</p>
             <p className="text-sm text-rafet-gris leading-relaxed">{produit.description}</p>

@@ -2,6 +2,7 @@ import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faBars, faXmark, faMagnifyingGlass, faBagShopping, faHeart } from '@fortawesome/free-solid-svg-icons'
+import { usePanier } from '../../context/PanierContext'
 
 const navLinks = [
   { label: 'SACS & CHAUSSURES', to: '/catalogue?categorie=sacs' },
@@ -12,6 +13,7 @@ const navLinks = [
 
 export default function Header() {
   const [menuOuvert, setMenuOuvert] = useState(false)
+  const { nombreArticles } = usePanier()
 
   return (
     <header className="bg-rafet-beige border-b border-rafet-brun/20">
@@ -38,7 +40,7 @@ export default function Header() {
           <Link to="/panier" aria-label="Panier" className="relative hidden md:inline-block">
             <FontAwesomeIcon icon={faBagShopping} />
             <span className="absolute -top-2 -right-2 bg-rafet-brun text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
-              0
+              {nombreArticles}
             </span>
           </Link>
           <button
@@ -87,7 +89,7 @@ export default function Header() {
             <Link to="/panier" aria-label="Panier" className="text-rafet-beige text-lg relative">
               <FontAwesomeIcon icon={faBagShopping} />
               <span className="absolute -top-2 -right-2 bg-white text-rafet-brun text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
-                0
+                {nombreArticles}
               </span>
             </Link>
           </div>
