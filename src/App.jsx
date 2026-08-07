@@ -1,11 +1,14 @@
 import AppRouter from './router/AppRouter'
 import { PanierProvider } from './context/PanierContext'
+import { AuthProvider } from './context/AuthContext'
 
 function App() {
   return (
-    <PanierProvider>
-      <AppRouter />
-    </PanierProvider>
+    <AuthProvider>
+      <PanierProvider>
+        <AppRouter />
+      </PanierProvider>
+    </AuthProvider>
   )
 }
 

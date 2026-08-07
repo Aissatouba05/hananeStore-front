@@ -1,14 +1,20 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBars, faXmark, faMagnifyingGlass, faBagShopping, faHeart } from '@fortawesome/free-solid-svg-icons'
+import {
+  faBars,
+  faXmark,
+  faMagnifyingGlass,
+  faBagShopping,
+  faHeart,
+} from '@fortawesome/free-solid-svg-icons'
 import { usePanier } from '../../context/PanierContext'
 
 const navLinks = [
-  { label: 'SACS & CHAUSSURES', to: '/catalogue?categorie=sacs' },
-  { label: 'VÊTEMENTS', to: '/catalogue?categorie=vetements' },
-  { label: 'ACCESSOIRES', to: '/catalogue?categorie=accessoires' },
-  { label: 'NOUVEAUTÉS', to: '/catalogue?tri=nouveautes' },
+  { label: 'Sacs & Chaussures', to: '/catalogue?categorie=sacs' },
+  { label: 'Vêtements', to: '/catalogue?categorie=vetements' },
+  { label: 'Accessoires', to: '/catalogue?categorie=accessoires' },
+  { label: 'Nouveautés', to: '/catalogue?tri=nouveautes' },
 ]
 
 export default function Header() {
@@ -17,45 +23,54 @@ export default function Header() {
 
   return (
     <header className="bg-rafet-beige border-b border-rafet-brun/20">
-      <div className="flex items-center justify-between px-6 md:px-8 py-4">
-        <Link to="/" className="font-serif text-xl tracking-widest text-rafet-noir">
+      <div className="flex items-center justify-between px-4 md:px-8 py-4">
+        <button
+          className="md:hidden text-rafet-brun text-lg"
+          aria-label="Ouvrir le menu"
+          onClick={() => setMenuOuvert(true)}
+        >
+          <FontAwesomeIcon icon={faBars} />
+        </button>
+
+        <Link to="/" className="font-serif text-lg md:text-xl tracking-widest text-rafet-noir mx-auto md:mx-0">
           HananeStore
         </Link>
 
-        <nav className="hidden md:flex items-center gap-8 text-xs tracking-widest text-rafet-brun">
+        <div className="hidden md:flex items-center gap-8 text-xs tracking-widest text-rafet-brun">
           {navLinks.map((link) => (
-            <Link key={link.label} to={link.to} className="hover:underline underline-offset-4">
+            <Link key={link.label} to={link.to} className="hover:underline underline-offset-4 uppercase">
               {link.label}
             </Link>
           ))}
-        </nav>
+        </div>
 
-        <div className="flex items-center gap-5 text-rafet-brun text-lg">
-          <button aria-label="Recherche" className="hidden md:inline">
-            <FontAwesomeIcon icon={faMagnifyingGlass} />
-          </button>
-          <Link to="/favoris" aria-label="Favoris" className="hidden md:inline-block">
+        <div className="flex items-center gap-4 md:gap-5 text-rafet-brun text-base md:text-lg">
+          <Link to="/favoris" aria-label="Favoris">
             <FontAwesomeIcon icon={faHeart} />
           </Link>
-          <Link to="/panier" aria-label="Panier" className="relative hidden md:inline-block">
+          <Link to="/panier" aria-label="Panier" className="relative">
             <FontAwesomeIcon icon={faBagShopping} />
             <span className="absolute -top-2 -right-2 bg-rafet-brun text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
               {nombreArticles}
             </span>
           </Link>
-          <button
-            className="md:hidden"
-            aria-label="Ouvrir le menu"
-            onClick={() => setMenuOuvert(true)}
-          >
-            <FontAwesomeIcon icon={faBars} />
-          </button>
+        </div>
+      </div>
+
+      <div className="md:hidden px-4 pb-4">
+        <div className="flex items-center gap-3 border border-rafet-brun/30 rounded-full px-4 py-2.5 bg-white/40">
+          <FontAwesomeIcon icon={faMagnifyingGlass} className="text-rafet-brun text-sm" />
+          <input
+            type="text"
+            placeholder="Rechercher un produit..."
+            className="flex-1 bg-transparent outline-none text-sm text-rafet-noir placeholder-rafet-gris"
+          />
         </div>
       </div>
 
       {menuOuvert && (
         <div className="fixed inset-0 bg-rafet-brun z-50 flex flex-col animate-[fadeIn_0.25s_ease]">
-          <div className="flex items-center justify-between px-6 py-5">
+          <div className="flex items-center justify-between px-6 py-5 border-b border-white/10">
             <span className="font-serif text-xl tracking-widest text-white">HananeStore</span>
             <button
               className="text-rafet-beige text-xl"
@@ -66,32 +81,17 @@ export default function Header() {
             </button>
           </div>
 
-          <div className="flex flex-col items-start gap-7 px-8 mt-8">
+          <div className="flex flex-col mt-4">
             {navLinks.map((link) => (
               <Link
                 key={link.label}
                 to={link.to}
                 onClick={() => setMenuOuvert(false)}
-                className="font-serif text-2xl text-white hover:text-rafet-beige transition-colors"
+                className="font-serif text-2xl text-white px-8 py-4 border-b border-white/10 hover:bg-white/5 hover:pl-10 transition-all duration-300"
               >
                 {link.label}
               </Link>
             ))}
-          </div>
-
-          <div className="flex justify-center gap-10 px-6 py-6 mt-auto">
-            <button aria-label="Recherche" className="text-rafet-beige text-lg">
-              <FontAwesomeIcon icon={faMagnifyingGlass} />
-            </button>
-            <Link to="/favoris" aria-label="Favoris" className="text-rafet-beige text-lg">
-              <FontAwesomeIcon icon={faHeart} />
-            </Link>
-            <Link to="/panier" aria-label="Panier" className="text-rafet-beige text-lg relative">
-              <FontAwesomeIcon icon={faBagShopping} />
-              <span className="absolute -top-2 -right-2 bg-white text-rafet-brun text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
-                {nombreArticles}
-              </span>
-            </Link>
           </div>
         </div>
       )}

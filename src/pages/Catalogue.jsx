@@ -1,7 +1,7 @@
-import { useState, useMemo, useEffect } from 'react'
+import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ui/ProductCard'
-import { produits } from '../data/produits'
+import { listerProduits } from '../services/produitApi'
 
 const filtres = [
   { label: 'TOUS', valeur: 'tous' },
@@ -16,25 +16,31 @@ export default function Catalogue() {
   const triUrl = searchParams.get('tri')
 
   const [categorieActive, setCategorieActive] = useState(categorieUrl)
+  const [produits, setProduits] = useState([])
+  const [chargement, setChargement] = useState(true)
+  const [erreur, setErreur] = useState(null)
 
-  // Resynchronise le filtre à chaque changement d'URL (ex: clic sur un lien du menu)
   useEffect(() => {
     setCategorieActive(categorieUrl)
   }, [categorieUrl])
 
-  const produitsFiltres = useMemo(() => {
-    let liste = [...produits]
-
-    if (categorieActive !== 'tous') {
-      liste = liste.filter((p) => p.categorie === categorieActive)
+  useEffect(() => {
+    const chargerProduits = async () => {
+      setChargement(true)
+      setErreur(null)
+      try {
+        const slugCategorie = categorieActive !== 'tous' ? categorieActive : undefined
+        const data = await listerProduits(slugCategorie)
+        setProduits(data)
+      } catch (err) {
+        setErreur("Impossible de charger les produits. Vérifie que le serveur backend tourne bien.")
+        console.error(err)
+      } finally {
+        setChargement(false)
+      }
     }
-
-    if (triUrl === 'nouveautes') {
-      liste = liste.slice().reverse()
-    }
-
-    return liste
-  }, [categorieActive, triUrl])
+    chargerProduits()
+  }, [categorieActive])
 
   const changerCategorie = (valeur) => {
     setCategorieActive(valeur)
@@ -72,16 +78,26 @@ export default function Catalogue() {
         ))}
       </div>
 
-      {produitsFiltres.length === 0 ? (
+      {chargement ? (
+        <p className="text-center text-rafet-gris py-20">Chargement des produits...</p>
+      ) : erreur ? (
+        <p className="text-center text-red-600 py-20">{erreur}</p>
+      ) : produits.length === 0 ? (
         <div className="text-center py-20">
           <p className="text-rafet-gris">Aucun produit trouvé dans cette catégorie.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {produitsFiltres.map((produit, i) => (
+          {produits.map((produit, i) => (
             <ProductCard
-              key={produit.id}
-              produit={{ ...produit, image: produit.images[0] }}
+              key={produit._id}
+              produit={{
+                id: produit._id,
+                nom: produit.nom,
+                prix: produit.prix,
+                badge: produit.badge,
+                image: produit.images?.[0],
+              }}
               delai={(i % 4) * 120}
             />
           ))}
@@ -89,7 +105,7 @@ export default function Catalogue() {
       )}
 
       <p className="text-xs text-rafet-gris mt-10">
-        {produitsFiltres.length} article{produitsFiltres.length > 1 ? 's' : ''}
+        {produits.length} article{produits.length > 1 ? 's' : ''}
       </p>
     </div>
   )

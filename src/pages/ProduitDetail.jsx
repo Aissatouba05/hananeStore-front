@@ -1,16 +1,19 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { useParams, Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faStar, faHeart, faMinus, faPlus, faCheck } from '@fortawesome/free-solid-svg-icons'
 import { faStar as faStarOutline } from '@fortawesome/free-regular-svg-icons'
-import { getProduitById } from '../data/produits'
+import { obtenirProduit } from '../services/produitApi'
 import { usePanier } from '../context/PanierContext'
 import Button from '../components/ui/Button'
 
 export default function ProduitDetail() {
   const { id } = useParams()
-  const produit = getProduitById(id)
   const { ajouterAuPanier } = usePanier()
+
+  const [produit, setProduit] = useState(null)
+  const [chargement, setChargement] = useState(true)
+  const [erreur, setErreur] = useState(null)
 
   const [imageActive, setImageActive] = useState(0)
   const [couleurActive, setCouleurActive] = useState(0)
@@ -18,7 +21,27 @@ export default function ProduitDetail() {
   const [quantite, setQuantite] = useState(1)
   const [ajoute, setAjoute] = useState(false)
 
-  if (!produit) {
+  useEffect(() => {
+    const charger = async () => {
+      setChargement(true)
+      try {
+        const data = await obtenirProduit(id)
+        setProduit(data)
+      } catch (err) {
+        setErreur('Produit introuvable.')
+        console.error(err)
+      } finally {
+        setChargement(false)
+      }
+    }
+    charger()
+  }, [id])
+
+  if (chargement) {
+    return <div className="px-8 py-24 text-center text-rafet-gris">Chargement...</div>
+  }
+
+  if (erreur || !produit) {
     return (
       <div className="px-8 py-24 text-center">
         <h1 className="font-serif text-2xl text-rafet-noir">Produit introuvable</h1>
@@ -29,10 +52,25 @@ export default function ProduitDetail() {
     )
   }
 
-  const etoiles = Math.round(produit.note)
+  // Extrait les couleurs et tailles uniques depuis les variantes
+  const couleursUniques = [
+    ...new Map(produit.variantes.map((v) => [v.couleurNom, { nom: v.couleurNom, hex: v.couleurHex }])).values(),
+  ]
+  const taillesUniques = [...new Set(produit.variantes.map((v) => v.taille).filter(Boolean))]
+
+  const images = produit.images && produit.images.length > 0 ? produit.images : ['']
 
   const handleAjouterAuPanier = () => {
-    ajouterAuPanier(produit, produit.couleurs[couleurActive].nom, produit.tailles[tailleActive], quantite)
+    const produitAdapte = {
+      id: produit._id,
+      nom: produit.nom,
+      prix: produit.prix,
+      images: images,
+    }
+    const couleur = couleursUniques[couleurActive]?.nom || 'Unique'
+    const taille = taillesUniques[tailleActive] || 'Unique'
+
+    ajouterAuPanier(produitAdapte, couleur, taille, quantite)
     setAjoute(true)
     setTimeout(() => setAjoute(false), 2000)
   }
@@ -42,8 +80,8 @@ export default function ProduitDetail() {
       <div className="text-xs text-rafet-gris mb-8 flex items-center gap-2">
         <Link to="/" className="hover:text-rafet-brun">Accueil</Link>
         <span>/</span>
-        <Link to={`/catalogue?categorie=${produit.categorie}`} className="hover:text-rafet-brun capitalize">
-          {produit.categorie}
+        <Link to={`/catalogue?categorie=${produit.categorie?.slug}`} className="hover:text-rafet-brun capitalize">
+          {produit.categorie?.nom}
         </Link>
         <span>/</span>
         <span className="text-rafet-noir">{produit.nom}</span>
@@ -51,25 +89,29 @@ export default function ProduitDetail() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16">
         <div className="flex gap-4">
-          <div className="flex flex-col gap-3">
-            {produit.images.map((img, i) => (
-              <button
-                key={img}
-                onClick={() => setImageActive(i)}
-                className={`w-16 h-20 rounded-sm overflow-hidden border-2 transition-colors ${
-                  i === imageActive ? 'border-rafet-brun' : 'border-transparent'
-                }`}
-              >
-                <img src={img} alt="" className="w-full h-full object-cover" />
-              </button>
-            ))}
-          </div>
+          {images.length > 1 && (
+            <div className="flex flex-col gap-3">
+              {images.map((img, i) => (
+                <button
+                  key={img + i}
+                  onClick={() => setImageActive(i)}
+                  className={`w-16 h-20 rounded-sm overflow-hidden border-2 transition-colors bg-rafet-beige ${
+                    i === imageActive ? 'border-rafet-brun' : 'border-transparent'
+                  }`}
+                >
+                  {img && <img src={img} alt="" className="w-full h-full object-cover" />}
+                </button>
+              ))}
+            </div>
+          )}
           <div className="flex-1 aspect-[3/4] rounded-sm overflow-hidden bg-rafet-beige">
-            <img
-              src={produit.images[imageActive]}
-              alt={produit.nom}
-              className="w-full h-full object-cover"
-            />
+            {images[imageActive] && (
+              <img
+                src={images[imageActive]}
+                alt={produit.nom}
+                className="w-full h-full object-cover"
+              />
+            )}
           </div>
         </div>
 
@@ -77,39 +119,32 @@ export default function ProduitDetail() {
           <h1 className="font-serif text-2xl md:text-3xl text-rafet-noir mb-3">{produit.nom}</h1>
           <p className="text-xl text-rafet-brun mb-4">{produit.prix.toLocaleString('fr-FR')} FCFA</p>
 
-          <div className="flex items-center gap-2 mb-6 pb-6 border-b border-rafet-beige">
-            <div className="flex gap-0.5 text-rafet-brun text-sm">
-              {[1, 2, 3, 4, 5].map((n) => (
-                <FontAwesomeIcon key={n} icon={n <= etoiles ? faStar : faStarOutline} />
-              ))}
+          {couleursUniques.length > 0 && (
+            <div className="mb-6">
+              <p className="text-sm text-rafet-noir mb-3">
+                Couleur : <span className="text-rafet-gris">{couleursUniques[couleurActive]?.nom}</span>
+              </p>
+              <div className="flex gap-3">
+                {couleursUniques.map((couleur, i) => (
+                  <button
+                    key={couleur.nom}
+                    onClick={() => setCouleurActive(i)}
+                    aria-label={couleur.nom}
+                    className={`w-9 h-9 rounded-full border-2 transition-transform ${
+                      i === couleurActive ? 'border-rafet-brun scale-110' : 'border-rafet-beige'
+                    }`}
+                    style={{ backgroundColor: couleur.hex }}
+                  ></button>
+                ))}
+              </div>
             </div>
-            <span className="text-xs text-rafet-gris">{produit.nombreAvis} avis</span>
-          </div>
+          )}
 
-          <div className="mb-6">
-            <p className="text-sm text-rafet-noir mb-3">
-              Couleur : <span className="text-rafet-gris">{produit.couleurs[couleurActive].nom}</span>
-            </p>
-            <div className="flex gap-3">
-              {produit.couleurs.map((couleur, i) => (
-                <button
-                  key={couleur.nom}
-                  onClick={() => setCouleurActive(i)}
-                  aria-label={couleur.nom}
-                  className={`w-9 h-9 rounded-full border-2 transition-transform ${
-                    i === couleurActive ? 'border-rafet-brun scale-110' : 'border-rafet-beige'
-                  }`}
-                  style={{ backgroundColor: couleur.hex }}
-                ></button>
-              ))}
-            </div>
-          </div>
-
-          {produit.tailles[0] !== 'Unique' && (
+          {taillesUniques.length > 0 && (
             <div className="mb-6">
               <p className="text-sm text-rafet-noir mb-3">Taille</p>
               <div className="flex flex-wrap gap-2">
-                {produit.tailles.map((taille, i) => (
+                {taillesUniques.map((taille, i) => (
                   <button
                     key={taille}
                     onClick={() => setTailleActive(i)}

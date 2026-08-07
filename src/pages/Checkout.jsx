@@ -1,8 +1,9 @@
 import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCheck, faLock } from '@fortawesome/free-solid-svg-icons'
+import { faLock } from '@fortawesome/free-solid-svg-icons'
 import { usePanier } from '../context/PanierContext'
+import { creerCommande } from '../services/commandeApi'
 import Button from '../components/ui/Button'
 
 export default function Checkout() {
@@ -17,21 +18,43 @@ export default function Checkout() {
     notes: '',
   })
   const [envoiEnCours, setEnvoiEnCours] = useState(false)
+  const [erreur, setErreur] = useState(null)
 
   const handleChange = (e) => {
     setFormulaire({ ...formulaire, [e.target.name]: e.target.value })
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
     setEnvoiEnCours(true)
+    setErreur(null)
 
-    // Simulation d'envoi — sera remplacé par un vrai appel API au backend
-    setTimeout(() => {
-      console.log('Commande envoyée :', { ...formulaire, articles, total: totalPanier })
+    try {
+      const commandeData = {
+        nomClient: formulaire.nom,
+        telephone: formulaire.telephone,
+        adresse: formulaire.adresse,
+        ville: formulaire.ville,
+        notes: formulaire.notes,
+        articles: articles.map((a) => ({
+          produit: a.id,
+          nom: a.nom,
+          prix: a.prix,
+          couleur: a.couleur,
+          taille: a.taille,
+          quantite: a.quantite,
+        })),
+      }
+
+      await creerCommande(commandeData)
       viderPanier()
       navigate('/checkout/confirmation')
-    }, 1200)
+    } catch (err) {
+      setErreur("Une erreur est survenue lors de l'envoi de la commande. Vérifie ta connexion et réessaie.")
+      console.error(err)
+    } finally {
+      setEnvoiEnCours(false)
+    }
   }
 
   if (articles.length === 0) {
@@ -55,7 +78,6 @@ export default function Checkout() {
       </p>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-10">
-        {/* Formulaire */}
         <form onSubmit={handleSubmit} className="lg:col-span-2 flex flex-col gap-5">
           <div>
             <label className="text-sm text-rafet-noir mb-2 block">Nom complet *</label>
@@ -121,12 +143,13 @@ export default function Checkout() {
             />
           </div>
 
+          {erreur && <p className="text-sm text-red-600">{erreur}</p>}
+
           <Button variant="brun" type="submit" disabled={envoiEnCours} className="mt-2">
             {envoiEnCours ? 'ENVOI EN COURS...' : 'CONFIRMER LA COMMANDE'}
           </Button>
         </form>
 
-        {/* Résumé */}
         <div className="bg-rafet-beige/40 rounded-xl p-6 h-fit">
           <h2 className="font-serif text-lg text-rafet-noir mb-6">Votre commande</h2>
 
@@ -134,7 +157,9 @@ export default function Checkout() {
             {articles.map((article) => (
               <div key={article.cle} className="flex gap-3">
                 <div className="w-14 h-16 rounded-md overflow-hidden bg-rafet-beige flex-shrink-0">
-                  <img src={article.image} alt={article.nom} className="w-full h-full object-cover" />
+                  {article.image && (
+                    <img src={article.image} alt={article.nom} className="w-full h-full object-cover" />
+                  )}
                 </div>
                 <div className="flex-1">
                   <p className="text-xs text-rafet-noir">{article.nom}</p>
