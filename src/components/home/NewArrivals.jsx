@@ -1,13 +1,28 @@
-import { useRef } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import ProductCard from '../ui/ProductCard'
-import { produits } from '../../data/produits'
-
-const nouveautes = produits.slice(3, 8)
+import { listerProduits } from '../../services/produitApi'
 
 export default function NewArrivals() {
+  const [produits, setProduits] = useState([])
+  const [chargement, setChargement] = useState(true)
   const scrollRef = useRef(null)
+
+  useEffect(() => {
+    const charger = async () => {
+      try {
+        const data = await listerProduits()
+        setProduits(data.slice(0, 8))
+        // setProduits(data.slice(3, 11))
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setChargement(false)
+      }
+    }
+    charger()
+  }, [])
 
   const scroll = (direction) => {
     if (scrollRef.current) {
@@ -15,6 +30,8 @@ export default function NewArrivals() {
       scrollRef.current.scrollBy({ left: direction * (largeur + 24), behavior: 'smooth' })
     }
   }
+
+  if (chargement || produits.length === 0) return null
 
   return (
     <section className="px-6 md:px-12 py-14 bg-rafet-beige/30">
@@ -42,12 +59,17 @@ export default function NewArrivals() {
         ref={scrollRef}
         className="flex gap-6 overflow-x-auto scroll-smooth snap-x snap-mandatory pb-2 no-scrollbar"
       >
-        {nouveautes.map((produit) => (
-          <div
-            key={produit.id}
-            className="flex-shrink-0 w-full sm:w-80 snap-start"
-          >
-            <ProductCard produit={{ ...produit, image: produit.images[0] }} />
+        {produits.map((produit) => (
+          <div key={produit._id} className="flex-shrink-0 w-full sm:w-80 snap-start">
+            <ProductCard
+              produit={{
+                id: produit._id,
+                nom: produit.nom,
+                prix: produit.prix,
+                badge: produit.badge,
+                image: produit.images?.[0],
+              }}
+            />
           </div>
         ))}
       </div>

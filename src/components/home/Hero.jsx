@@ -30,21 +30,22 @@ export default function Hero() {
           }`}
         />
       ))}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"></div>
+      <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/20 to-transparent"></div>
 
       <div className="relative h-full flex flex-col justify-end px-6 md:px-12 pb-12 max-w-xl">
-        <span className="text-[11px] tracking-[3px] text-black mb-3">
-          LES PIÈCES ICONIQUES DE LA SAISON
+        <span className="text-[11px] tracking-[3px] text-rafet-noir mb-3">
+          POUR TOUTE LA FAMILLE
         </span>
-        <h1 className="font-serif font-light text-3xl md:text-5xl text-white leading-tight mb-4">
-          HananeStore
+        <h1 className="font-serif font-light text-3xl md:text-5xl leading-tight mb-4">
+          <span style={{ color: '#111111' }}>Hanane</span>
+          <span style={{ color: '#B76E79' }}>Store</span>
         </h1>
-        <p className="text-sm md:text-base text-white/85 leading-relaxed mb-6 max-w-md">
-          Sacs, chaussures, vêtements et accessoires sélectionnés avec soin pour un look élégant et moderne.
+        <p className="text-sm md:text-base text-rafet-noir/85 leading-relaxed mb-6 max-w-md">
+          Mode, accessoires, parfums et jouets — une sélection pensée pour elle, pour lui et pour les enfants.
         </p>
-        <div className="w-10 h-px bg-rafet-beige mb-6"></div>
+        <div className="w-10 h-px bg-rafet-brun mb-6"></div>
         <Link to="/catalogue">
-          <Button variant="beige">DÉCOUVRIR LA COLLECTION</Button>
+          <Button variant="brun">DÉCOUVRIR LA COLLECTION</Button>
         </Link>
       </div>
 
@@ -53,7 +54,7 @@ export default function Hero() {
           <span
             key={i}
             className={`h-[2px] w-4 transition-colors duration-300 ${
-              i === index ? 'bg-white' : 'bg-white/40'
+              i === index ? 'bg-rafet-noir' : 'bg-rafet-noir/30'
             }`}
           ></span>
         ))}

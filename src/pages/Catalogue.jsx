@@ -2,81 +2,99 @@ import { useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
 import ProductCard from '../components/ui/ProductCard'
 import { listerProduits } from '../services/produitApi'
-
-const filtres = [
-  { label: 'TOUS', valeur: 'tous' },
-  { label: 'SACS & CHAUSSURES', valeur: 'sacs' },
-  { label: 'VÊTEMENTS', valeur: 'vetements' },
-  { label: 'ACCESSOIRES', valeur: 'accessoires' },
-]
+import { listerCategories } from '../services/categorieApi'
 
 export default function Catalogue() {
   const [searchParams, setSearchParams] = useSearchParams()
-  const categorieUrl = searchParams.get('categorie') || 'tous'
+  const rayonUrl = searchParams.get('rayon') || ''
+  const categorieUrl = searchParams.get('categorie') || ''
   const triUrl = searchParams.get('tri')
 
-  const [categorieActive, setCategorieActive] = useState(categorieUrl)
   const [produits, setProduits] = useState([])
+  const [categoriesDisponibles, setCategoriesDisponibles] = useState([])
   const [chargement, setChargement] = useState(true)
   const [erreur, setErreur] = useState(null)
 
   useEffect(() => {
-    setCategorieActive(categorieUrl)
-  }, [categorieUrl])
+    const chargerCategories = async () => {
+      if (rayonUrl) {
+        const cats = await listerCategories(rayonUrl)
+        setCategoriesDisponibles(cats)
+      } else {
+        setCategoriesDisponibles([])
+      }
+    }
+    chargerCategories()
+  }, [rayonUrl])
 
   useEffect(() => {
     const chargerProduits = async () => {
       setChargement(true)
       setErreur(null)
       try {
-        const slugCategorie = categorieActive !== 'tous' ? categorieActive : undefined
-        const data = await listerProduits(slugCategorie)
+        const data = await listerProduits(categorieUrl || undefined)
         setProduits(data)
       } catch (err) {
-        setErreur("Impossible de charger les produits. Vérifie que le serveur backend tourne bien.")
+        setErreur('Impossible de charger les produits.')
         console.error(err)
       } finally {
         setChargement(false)
       }
     }
     chargerProduits()
-  }, [categorieActive])
+  }, [categorieUrl])
 
-  const changerCategorie = (valeur) => {
-    setCategorieActive(valeur)
-    if (valeur === 'tous') {
-      searchParams.delete('categorie')
+  const changerCategorie = (slug) => {
+    if (slug) {
+      searchParams.set('categorie', slug)
     } else {
-      searchParams.set('categorie', valeur)
+      searchParams.delete('categorie')
     }
-    searchParams.delete('tri')
     setSearchParams(searchParams)
   }
+
+  const titre = rayonUrl
+    ? rayonUrl.charAt(0).toUpperCase() + rayonUrl.slice(1)
+    : triUrl === 'nouveautes'
+    ? 'Nouveautés'
+    : 'Catalogue'
 
   return (
     <div className="px-6 md:px-12 py-10">
       <div className="mb-10">
-        <span className="text-[11px] tracking-[3px] text-rafet-gris">NOTRE SÉLECTION</span>
-        <h1 className="font-serif text-3xl text-rafet-noir mt-1">
-          {triUrl === 'nouveautes' ? 'Nouveautés' : 'Catalogue'}
-        </h1>
+        <span className="text-[11px] tracking-[3px] text-rafet-gris">
+          {rayonUrl ? 'RAYON' : 'NOTRE SÉLECTION'}
+        </span>
+        <h1 className="font-serif text-3xl text-rafet-noir mt-1">{titre}</h1>
       </div>
 
-      <div className="flex flex-wrap gap-3 mb-10">
-        {filtres.map((filtre) => (
+      {categoriesDisponibles.length > 0 && (
+        <div className="flex flex-wrap gap-3 mb-10">
           <button
-            key={filtre.valeur}
-            onClick={() => changerCategorie(filtre.valeur)}
+            onClick={() => changerCategorie('')}
             className={`px-5 py-2.5 text-xs tracking-widest border transition-colors duration-300 ${
-              categorieActive === filtre.valeur && !triUrl
+              !categorieUrl
                 ? 'bg-rafet-noir text-white border-rafet-noir'
                 : 'border-rafet-beige text-rafet-brun hover:border-rafet-brun'
             }`}
           >
-            {filtre.label}
+            TOUS
           </button>
-        ))}
-      </div>
+          {categoriesDisponibles.map((cat) => (
+            <button
+              key={cat._id}
+              onClick={() => changerCategorie(cat.slug)}
+              className={`px-5 py-2.5 text-xs tracking-widest border transition-colors duration-300 uppercase ${
+                categorieUrl === cat.slug
+                  ? 'bg-rafet-noir text-white border-rafet-noir'
+                  : 'border-rafet-beige text-rafet-brun hover:border-rafet-brun'
+              }`}
+            >
+              {cat.nom}
+            </button>
+          ))}
+        </div>
+      )}
 
       {chargement ? (
         <p className="text-center text-rafet-gris py-20">Chargement des produits...</p>
@@ -84,7 +102,7 @@ export default function Catalogue() {
         <p className="text-center text-red-600 py-20">{erreur}</p>
       ) : produits.length === 0 ? (
         <div className="text-center py-20">
-          <p className="text-rafet-gris">Aucun produit trouvé dans cette catégorie.</p>
+          <p className="text-rafet-gris">Aucun produit trouvé.</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">

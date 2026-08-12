@@ -22,9 +22,9 @@ export default function ProductCard({ produit, taille = 'normal', delai = 0 }) {
   return (
     <div
       ref={ref}
-      className="h-full flex flex-col bg-white border border-rafet-beige rounded-2xl p-3 transition-shadow duration-300 hover:shadow-md"
+      className="h-full flex flex-col bg-white border border-[#B76E79]/20 rounded-2xl p-3 transition-shadow duration-300 hover:shadow-md"
     >
-      <Link to={`/produit/${produit.id}`} className="group relative flex-1 min-h-[220px] rounded-xl overflow-hidden bg-rafet-beige block">
+      <Link to={`/produit/${produit.id}`} className="group relative flex-1 min-h-[220px] rounded-xl overflow-hidden bg-[#B76E79]/[0.08] block">
         {produit.image && (
           <img
             src={produit.image}
@@ -38,7 +38,7 @@ export default function ProductCard({ produit, taille = 'normal', delai = 0 }) {
 
         {produit.badge && (
           <span
-            className={`absolute top-3 left-3 bg-rafet-noir text-white text-[10px] tracking-widest px-3 py-1 rounded-sm transition-all duration-500 ${
+            className={`absolute top-3 left-3 bg-[#9C5561] text-white text-[10px] tracking-widest px-3 py-1 rounded-sm transition-all duration-500 ${
               visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
             }`}
             style={{ transitionDelay: visible ? `${delai + 400}ms` : '0ms' }}
@@ -53,21 +53,21 @@ export default function ProductCard({ produit, taille = 'normal', delai = 0 }) {
             e.preventDefault()
             setFavori((f) => !f)
           }}
-          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-white/90 flex items-center justify-center hover:scale-110 active:scale-95 transition-transform duration-200"
+          className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#B76E79]/15 backdrop-blur-sm flex items-center justify-center hover:scale-110 active:scale-95 transition-transform duration-200"
         >
           <FontAwesomeIcon
             icon={faHeart}
-            className={`text-xs transition-colors duration-200 ${favori ? 'text-rafet-brun animate-pop' : 'text-rafet-gris'}`}
+            className={`text-xs transition-colors duration-200 ${favori ? 'text-[#B76E79] animate-pop' : 'text-[#111111]/40'}`}
           />
         </button>
       </Link>
 
       <div className="pt-3 px-1">
-        <p className="text-sm text-rafet-noir font-medium mb-1">{produit.nom}</p>
-        <p className="text-sm text-rafet-brun mb-3">{produit.prix.toLocaleString('fr-FR')} FCFA</p>
+        <p className="text-sm text-[#111111] font-medium mb-1">{produit.nom}</p>
+        <p className="text-sm text-[#B76E79] mb-3">{produit.prix.toLocaleString('fr-FR')} FCFA</p>
         <Link
           to={`/produit/${produit.id}`}
-          className="block text-center bg-rafet-brun text-white text-xs tracking-widest py-2.5 rounded-full hover:bg-rafet-noir transition-colors duration-300"
+          className="block text-center bg-[#B76E79] text-white text-xs tracking-widest py-2.5 rounded-full hover:bg-[#9C5561] transition-colors duration-300"
         >
           VOIR LE PRODUIT
         </Link>

@@ -5,13 +5,21 @@ import { faPlus, faTrash, faImage } from '@fortawesome/free-solid-svg-icons'
 import AdminLayout from '../../components/admin/AdminLayout'
 import { useAuth } from '../../context/AuthContext'
 import api from '../../services/api'
+import { listerCategories } from '../../services/categorieApi'
 import Button from '../../components/ui/Button'
+
+const rayons = [
+  { label: 'Femme', valeur: 'femme' },
+  { label: 'Homme', valeur: 'homme' },
+  { label: 'Enfants', valeur: 'enfants' },
+]
 
 export default function AjouterProduit() {
   const { utilisateur } = useAuth()
   const navigate = useNavigate()
 
-  const [categories, setCategories] = useState([])
+  const [categoriesParRayon, setCategoriesParRayon] = useState({})
+  const [rayonChoisi, setRayonChoisi] = useState('femme')
   const [nom, setNom] = useState('')
   const [description, setDescription] = useState('')
   const [prix, setPrix] = useState('')
@@ -26,17 +34,30 @@ export default function AjouterProduit() {
   const [erreur, setErreur] = useState(null)
 
   useEffect(() => {
-    const chargerCategories = async () => {
+    const charger = async () => {
       try {
-        const { data } = await api.get('/categories')
-        setCategories(data)
-        if (data.length > 0) setCategorie(data[0]._id)
+        const toutes = await listerCategories()
+        const groupees = { femme: [], homme: [], enfants: [] }
+        toutes.forEach((cat) => {
+          if (groupees[cat.rayon]) groupees[cat.rayon].push(cat)
+        })
+        setCategoriesParRayon(groupees)
       } catch (err) {
         console.error(err)
       }
     }
-    chargerCategories()
+    charger()
   }, [])
+
+  // Quand le rayon change, on sélectionne automatiquement sa première catégorie
+  useEffect(() => {
+    const catsDuRayon = categoriesParRayon[rayonChoisi]
+    if (catsDuRayon && catsDuRayon.length > 0) {
+      setCategorie(catsDuRayon[0]._id)
+    } else {
+      setCategorie('')
+    }
+  }, [rayonChoisi, categoriesParRayon])
 
   const ajouterVariante = () => {
     setVariantes([...variantes, { couleurNom: '', couleurHex: '#4C352B', taille: '', stock: '' }])
@@ -90,12 +111,13 @@ export default function AjouterProduit() {
     }
   }
 
+  const categoriesDisponibles = categoriesParRayon[rayonChoisi] || []
+
   return (
     <AdminLayout>
       <h1 className="font-serif text-2xl text-rafet-noir mb-8">Ajouter un produit</h1>
 
       <form onSubmit={handleSubmit} className="max-w-2xl flex flex-col gap-8">
-        {/* Infos de base */}
         <div className="bg-white border border-rafet-beige rounded-xl p-6 flex flex-col gap-5">
           <h2 className="text-sm tracking-widest text-rafet-noir">INFORMATIONS GÉNÉRALES</h2>
 
@@ -120,16 +142,31 @@ export default function AjouterProduit() {
             />
           </div>
 
+          <div>
+            <label className="text-sm text-rafet-noir mb-2 block">Prix (FCFA)</label>
+            <input
+              type="number"
+              value={prix}
+              onChange={(e) => setPrix(e.target.value)}
+              required
+              className="w-full border border-rafet-beige px-4 py-3 text-sm outline-none focus:border-rafet-brun rounded-md"
+            />
+          </div>
+
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <label className="text-sm text-rafet-noir mb-2 block">Prix (FCFA)</label>
-              <input
-                type="number"
-                value={prix}
-                onChange={(e) => setPrix(e.target.value)}
-                required
+              <label className="text-sm text-rafet-noir mb-2 block">Rayon</label>
+              <select
+                value={rayonChoisi}
+                onChange={(e) => setRayonChoisi(e.target.value)}
                 className="w-full border border-rafet-beige px-4 py-3 text-sm outline-none focus:border-rafet-brun rounded-md"
-              />
+              >
+                {rayons.map((rayon) => (
+                  <option key={rayon.valeur} value={rayon.valeur}>
+                    {rayon.label}
+                  </option>
+                ))}
+              </select>
             </div>
 
             <div>
@@ -138,13 +175,18 @@ export default function AjouterProduit() {
                 value={categorie}
                 onChange={(e) => setCategorie(e.target.value)}
                 required
-                className="w-full border border-rafet-beige px-4 py-3 text-sm outline-none focus:border-rafet-brun rounded-md capitalize"
+                disabled={categoriesDisponibles.length === 0}
+                className="w-full border border-rafet-beige px-4 py-3 text-sm outline-none focus:border-rafet-brun rounded-md disabled:bg-gray-50 disabled:text-gray-400"
               >
-                {categories.map((cat) => (
-                  <option key={cat._id} value={cat._id}>
-                    {cat.nom}
-                  </option>
-                ))}
+                {categoriesDisponibles.length === 0 ? (
+                  <option>Aucune catégorie</option>
+                ) : (
+                  categoriesDisponibles.map((cat) => (
+                    <option key={cat._id} value={cat._id}>
+                      {cat.nom}
+                    </option>
+                  ))
+                )}
               </select>
             </div>
           </div>
@@ -164,7 +206,6 @@ export default function AjouterProduit() {
           </div>
         </div>
 
-        {/* Images */}
         <div className="bg-white border border-rafet-beige rounded-xl p-6 flex flex-col gap-4">
           <h2 className="text-sm tracking-widest text-rafet-noir">IMAGES</h2>
 
@@ -191,7 +232,6 @@ export default function AjouterProduit() {
           )}
         </div>
 
-        {/* Variantes */}
         <div className="bg-white border border-rafet-beige rounded-xl p-6 flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <h2 className="text-sm tracking-widest text-rafet-noir">VARIANTES (COULEUR / TAILLE / STOCK)</h2>

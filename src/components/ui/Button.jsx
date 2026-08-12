@@ -1,6 +1,6 @@
 export default function Button({ children, variant = 'brun', className = '', ...props }) {
   const styles = {
-    brun: 'bg-rafet-brun text-white hover:bg-rafet-noir',
+    brun: 'bg-[#B76E79] text-white hover:bg-[#9c5860]',
     beige: 'bg-white text-rafet-brun hover:bg-rafet-beige',
     outline: 'bg-transparent border border-white text-white hover:bg-white hover:text-rafet-brun',
   }

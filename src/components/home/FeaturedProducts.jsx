@@ -1,10 +1,36 @@
+import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../ui/ProductCard'
-import { produits } from '../../data/produits'
-
-const selection = produits.slice(0, 3)
+import { listerProduits } from '../../services/produitApi'
 
 export default function FeaturedProducts() {
+  const [produits, setProduits] = useState([])
+  const [chargement, setChargement] = useState(true)
+
+  useEffect(() => {
+    const charger = async () => {
+      try {
+        const data = await listerProduits()
+        setProduits(data.slice(0, 3))
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setChargement(false)
+      }
+    }
+    charger()
+  }, [])
+
+  if (chargement) {
+    return (
+      <section className="px-6 md:px-12 py-14">
+        <p className="text-center text-rafet-gris">Chargement...</p>
+      </section>
+    )
+  }
+
+  if (produits.length === 0) return null
+
   return (
     <section className="px-6 md:px-12 py-14">
       <div className="flex items-baseline justify-between mb-8">
@@ -18,10 +44,16 @@ export default function FeaturedProducts() {
       </div>
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        {selection.map((produit, i) => (
+        {produits.map((produit, i) => (
           <ProductCard
-            key={produit.id}
-            produit={{ ...produit, image: produit.images[0] }}
+            key={produit._id}
+            produit={{
+              id: produit._id,
+              nom: produit.nom,
+              prix: produit.prix,
+              badge: produit.badge,
+              image: produit.images?.[0],
+            }}
             delai={i * 150}
           />
         ))}
