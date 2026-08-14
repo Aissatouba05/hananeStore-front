@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import ProductCard from '../ui/ProductCard'
-import { listerProduits } from '../../services/produitApi'
+import { listerProduitsVedettes } from '../../services/produitApi'
 
 export default function FeaturedProducts() {
   const [produits, setProduits] = useState([])
@@ -10,8 +10,8 @@ export default function FeaturedProducts() {
   useEffect(() => {
     const charger = async () => {
       try {
-        const data = await listerProduits()
-        setProduits(data.slice(0, 3))
+        const data = await listerProduitsVedettes(3)
+        setProduits(data)
       } catch (err) {
         console.error(err)
       } finally {

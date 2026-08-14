@@ -9,6 +9,7 @@ export default function Catalogue() {
   const rayonUrl = searchParams.get('rayon') || ''
   const categorieUrl = searchParams.get('categorie') || ''
   const triUrl = searchParams.get('tri')
+  const rechercheUrl = searchParams.get('recherche') || ''
 
   const [produits, setProduits] = useState([])
   const [categoriesDisponibles, setCategoriesDisponibles] = useState([])
@@ -32,7 +33,11 @@ export default function Catalogue() {
       setChargement(true)
       setErreur(null)
       try {
-        const data = await listerProduits(categorieUrl || undefined)
+        const data = await listerProduits(
+          categorieUrl || undefined,
+          rayonUrl || undefined,
+          rechercheUrl || undefined
+        )
         setProduits(data)
       } catch (err) {
         setErreur('Impossible de charger les produits.')
@@ -42,7 +47,7 @@ export default function Catalogue() {
       }
     }
     chargerProduits()
-  }, [categorieUrl])
+  }, [categorieUrl, rayonUrl, rechercheUrl])
 
   const changerCategorie = (slug) => {
     if (slug) {
@@ -53,7 +58,9 @@ export default function Catalogue() {
     setSearchParams(searchParams)
   }
 
-  const titre = rayonUrl
+  const titre = rechercheUrl
+    ? `Résultats pour « ${rechercheUrl} »`
+    : rayonUrl
     ? rayonUrl.charAt(0).toUpperCase() + rayonUrl.slice(1)
     : triUrl === 'nouveautes'
     ? 'Nouveautés'
@@ -63,7 +70,7 @@ export default function Catalogue() {
     <div className="px-6 md:px-12 py-10">
       <div className="mb-10">
         <span className="text-[11px] tracking-[3px] text-rafet-gris">
-          {rayonUrl ? 'RAYON' : 'NOTRE SÉLECTION'}
+          {rechercheUrl ? 'RECHERCHE' : rayonUrl ? 'RAYON' : 'NOTRE SÉLECTION'}
         </span>
         <h1 className="font-serif text-3xl text-rafet-noir mt-1">{titre}</h1>
       </div>
@@ -75,7 +82,7 @@ export default function Catalogue() {
             className={`px-5 py-2.5 text-xs tracking-widest border transition-colors duration-300 ${
               !categorieUrl
                 ? 'bg-rafet-noir text-white border-rafet-noir'
-                : 'border-rafet-beige text-rafet-brun hover:border-rafet-brun'
+                : 'border-[#B76E79] text-rafet-brun hover:bg-[#B76E79] hover:text-white'
             }`}
           >
             TOUS
@@ -87,7 +94,7 @@ export default function Catalogue() {
               className={`px-5 py-2.5 text-xs tracking-widest border transition-colors duration-300 uppercase ${
                 categorieUrl === cat.slug
                   ? 'bg-rafet-noir text-white border-rafet-noir'
-                  : 'border-rafet-beige text-rafet-brun hover:border-rafet-brun'
+                  : 'border-[#B76E79] text-rafet-brun hover:bg-[#B76E79] hover:text-white'
               }`}
             >
               {cat.nom}

@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { useNavigate, Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faLock, faEnvelope, faEye, faEyeSlash } from '@fortawesome/free-solid-svg-icons'
 import { useAuth } from '../../context/AuthContext'
@@ -107,6 +107,15 @@ export default function LoginAdmin() {
               {envoiEnCours ? 'CONNEXION...' : 'SE CONNECTER'}
             </Button>
           </form>
+
+          <div className="text-center mt-6">
+            <Link
+              to="/"
+              className="text-xs tracking-widest text-rafet-gris hover:text-rafet-brun transition-colors"
+            >
+              ← RETOUR À L'ACCUEIL
+            </Link>
+          </div>
         </div>
 
         <p className="text-center text-xs text-white/30 mt-8">

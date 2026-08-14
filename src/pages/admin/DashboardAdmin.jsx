@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faBoxOpen, faBagShopping, faBell, faClock } from '@fortawesome/free-solid-svg-icons'
+import { faBoxOpen, faBagShopping, faBell, faClock, faStar } from '@fortawesome/free-solid-svg-icons'
 import AdminLayout from '../../components/admin/AdminLayout'
 import api from '../../services/api'
 import { useAuth } from '../../context/AuthContext'
@@ -83,6 +83,13 @@ export default function DashboardAdmin() {
           >
             <FontAwesomeIcon icon={faBagShopping} />
             VOIR LES COMMANDES
+          </Link>
+          <Link
+            to="/admin/produits-accueil"
+            className="bg-white border border-rafet-brun text-rafet-brun text-xs tracking-widest px-5 py-3 rounded-md hover:bg-rafet-brun hover:text-white transition-colors flex items-center gap-2"
+          >
+            <FontAwesomeIcon icon={faStar} />
+            PRODUITS DE L'ACCUEIL
           </Link>
         </div>
       </div>

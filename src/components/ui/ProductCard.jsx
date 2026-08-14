@@ -2,11 +2,16 @@ import { useState, useRef, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
+import ModalAccesPrivilegie from './ModalAccesPrivilegie'
+import { useFavoris } from '../../context/Favoris'
 
 export default function ProductCard({ produit, taille = 'normal', delai = 0 }) {
-  const [favori, setFavori] = useState(false)
+  const { estFavori, basculerFavori } = useFavoris()
   const [visible, setVisible] = useState(false)
+  const [modaleOuverte, setModaleOuverte] = useState(false)
   const ref = useRef(null)
+
+  const favori = estFavori(produit.id)
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -18,6 +23,23 @@ export default function ProductCard({ produit, taille = 'normal', delai = 0 }) {
     if (ref.current) observer.observe(ref.current)
     return () => observer.disconnect()
   }, [])
+
+  const gererClicFavori = (e) => {
+    e.preventDefault()
+    const estAbonnee = localStorage.getItem('hananestore_abonnee') === 'true'
+
+    if (!estAbonnee) {
+      setModaleOuverte(true)
+      return
+    }
+
+    basculerFavori(produit)
+  }
+
+  const confirmerAbonnement = () => {
+    setModaleOuverte(false)
+    basculerFavori(produit)
+  }
 
   return (
     <div
@@ -49,10 +71,7 @@ export default function ProductCard({ produit, taille = 'normal', delai = 0 }) {
 
         <button
           aria-label="Ajouter aux favoris"
-          onClick={(e) => {
-            e.preventDefault()
-            setFavori((f) => !f)
-          }}
+          onClick={gererClicFavori}
           className="absolute top-3 right-3 w-8 h-8 rounded-full bg-[#B76E79]/15 backdrop-blur-sm flex items-center justify-center hover:scale-110 active:scale-95 transition-transform duration-200"
         >
           <FontAwesomeIcon
@@ -72,6 +91,13 @@ export default function ProductCard({ produit, taille = 'normal', delai = 0 }) {
           VOIR LE PRODUIT
         </Link>
       </div>
+
+      {modaleOuverte && (
+        <ModalAccesPrivilegie
+          onFermer={() => setModaleOuverte(false)}
+          onAbonnement={confirmerAbonnement}
+        />
+      )}
     </div>
   )
 }

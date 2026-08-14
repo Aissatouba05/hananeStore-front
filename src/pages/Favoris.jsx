@@ -1,9 +1,11 @@
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faHeart } from '@fortawesome/free-solid-svg-icons'
+import ProductCard from '../components/ui/ProductCard'
+import { useFavoris } from '../context/Favoris'
 
 export default function Favoris() {
-  const favoris = []
+  const { favoris } = useFavoris()
 
   if (favoris.length === 0) {
     return (
@@ -26,7 +28,12 @@ export default function Favoris() {
   return (
     <div className="px-6 md:px-12 py-12">
       <h1 className="font-serif text-2xl text-rafet-noir mb-8">Mes favoris</h1>
-      {/* Liste des favoris à venir une fois connectée au vrai state */}
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        {favoris.map((produit) => (
+          <ProductCard key={produit.id} produit={produit} />
+        ))}
+      </div>
     </div>
   )
 }

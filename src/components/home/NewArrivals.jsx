@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from 'react'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faChevronLeft, faChevronRight } from '@fortawesome/free-solid-svg-icons'
 import ProductCard from '../ui/ProductCard'
-import { listerProduits } from '../../services/produitApi'
+import { listerNouveautes } from '../../services/produitApi'
 
 export default function NewArrivals() {
   const [produits, setProduits] = useState([])
@@ -12,9 +12,8 @@ export default function NewArrivals() {
   useEffect(() => {
     const charger = async () => {
       try {
-        const data = await listerProduits()
-        setProduits(data.slice(0, 8))
-        // setProduits(data.slice(3, 11))
+        const data = await listerNouveautes(8)
+        setProduits(data)
       } catch (err) {
         console.error(err)
       } finally {

@@ -44,25 +44,25 @@ export default function Header() {
   }, [])
 
   return (
-    <header className="bg-white border-b border-rafet-beige relative z-30">
+    <header className="bg-white shadow-[0_2px_12px_rgba(17,17,17,0.06)] relative z-30">
       <div className="flex items-center justify-between px-4 md:px-8 py-2">
-        <div className="flex items-center gap-4 md:gap-5 text-rafet-brun text-base md:text-lg">
-          <Link to="/favoris" aria-label="Favoris">
+        <div className="flex items-center gap-4 md:gap-5 text-[#111111] text-base md:text-lg md:order-3">
+          <Link to="/favoris" aria-label="Favoris" className="hover:text-[#B76E79] transition-colors duration-200">
             <FontAwesomeIcon icon={faHeart} />
           </Link>
-          <Link to="/panier" aria-label="Panier" className="relative">
+          <Link to="/panier" aria-label="Panier" className="relative hover:text-[#B76E79] transition-colors duration-200">
             <FontAwesomeIcon icon={faCartShopping} />
-            <span className="absolute -top-2 -right-2 bg-rafet-brun text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
+            <span className="absolute -top-2 -right-2 bg-[#B76E79] text-white text-[10px] w-4 h-4 rounded-full flex items-center justify-center">
               {nombreArticles}
             </span>
           </Link>
         </div>
 
-        <Link to="/" className="flex items-center gap-2 mx-auto md:mx-0">
+        <Link to="/" className="flex items-center gap-2 mx-auto md:mx-0 md:order-1">
           <img src={logo} alt="HananeStore" className="h-16 md:h-20 w-auto object-contain" />
         </Link>
 
-        <div className="hidden md:flex items-center gap-8 text-xs tracking-widest text-rafet-brun">
+        <div className="hidden md:flex items-center gap-8 text-xs tracking-widest text-rafet-brun md:order-2">
           {rayons.map((rayon) => (
             <div
               key={rayon.valeur}
