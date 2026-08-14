@@ -45,7 +45,7 @@ export default function DashboardAdmin() {
   return (
     <AdminLayout>
       <h1 className="font-serif text-2xl text-rafet-noir mb-1">
-        Bonjour {utilisateur?.nom} 👋
+        Bonjour {utilisateur?.nom} 
       </h1>
       <p className="text-sm text-rafet-gris mb-8">Voici un aperçu de votre boutique aujourd'hui.</p>
 

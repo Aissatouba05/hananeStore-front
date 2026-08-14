@@ -87,7 +87,7 @@ export default function Checkout() {
               required
               value={formulaire.nom}
               onChange={handleChange}
-              placeholder="Ex : Aïcha Ba"
+              placeholder="Ex : sophie"
               className="w-full border border-rafet-beige px-4 py-3 text-sm outline-none focus:border-rafet-brun transition-colors rounded-md"
             />
           </div>
@@ -100,7 +100,7 @@ export default function Checkout() {
               required
               value={formulaire.telephone}
               onChange={handleChange}
-              placeholder="Ex : 77 123 45 67"
+              placeholder="Ex : 0612345678"
               className="w-full border border-rafet-beige px-4 py-3 text-sm outline-none focus:border-rafet-brun transition-colors rounded-md"
             />
           </div>
@@ -126,7 +126,7 @@ export default function Checkout() {
               required
               value={formulaire.ville}
               onChange={handleChange}
-              placeholder="Ex : Dakar"
+              placeholder="Ex : Casablanca"
               className="w-full border border-rafet-beige px-4 py-3 text-sm outline-none focus:border-rafet-brun transition-colors rounded-md"
             />
           </div>
@@ -176,7 +176,7 @@ export default function Checkout() {
 
           <div className="border-t border-rafet-brun/20 pt-4 flex justify-between text-base text-rafet-noir font-medium">
             <span>Total</span>
-            <span>{totalPanier.toLocaleString('fr-FR')} FCFA</span>
+            <span>{totalPanier.toLocaleString('fr-FR')} Dirame</span>
           </div>
         </div>
       </div>

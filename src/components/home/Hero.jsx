@@ -33,19 +33,22 @@ export default function Hero() {
       <div className="absolute inset-0 bg-gradient-to-t from-white/70 via-white/20 to-transparent"></div>
 
       <div className="relative h-full flex flex-col justify-end px-6 md:px-12 pb-12 max-w-xl">
+
+           <h1 className="font-serif font-light text-3xl md:text-5xl leading-tight mb-4">
+          <span style={{ color: '#111111' }}>Hanane</span>
+          <span style={{ color: '#B76E79' }}>Store</span>
+        </h1> 
+
         <span className="text-[11px] tracking-[3px] text-rafet-noir mb-3">
           POUR TOUTE LA FAMILLE
         </span>
-        <h1 className="font-serif font-light text-3xl md:text-5xl leading-tight mb-4">
-          <span style={{ color: '#111111' }}>Hanane</span>
-          <span style={{ color: '#B76E79' }}>Store</span>
-        </h1>
-        <p className="text-sm md:text-base text-rafet-noir/85 leading-relaxed mb-6 max-w-md">
+     
+        {/* <p className="text-sm md:text-base text-rafet-noir/85 leading-relaxed mb-6 max-w-md">
           Mode, accessoires, parfums et jouets — une sélection pensée pour elle, pour lui et pour les enfants.
-        </p>
+        </p> */}
         <div className="w-10 h-px bg-rafet-brun mb-6"></div>
         <Link to="/catalogue">
-          <Button variant="brun">DÉCOUVRIR LA COLLECTION</Button>
+          <Button variant="brun">DÉCOUVRIR</Button>
         </Link>
       </div>
 

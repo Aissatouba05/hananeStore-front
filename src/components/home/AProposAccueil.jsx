@@ -64,7 +64,7 @@ export default function AProposAccueil() {
   }, [])
 
   return (
-    <section className="px-6 md:px-12 py-16 bg-[#B76E79]/[0.04]">
+    <section id="a-propos" className="px-6 md:px-12 py-16 bg-[#B76E79]/[0.04]">
       <div className="text-center mb-10">
         <span className="text-[11px] tracking-[3px] text-rafet-gris">QUI SOMMES-NOUS</span>
         <h2 className="font-serif text-2xl md:text-3xl text-rafet-noir mt-1">

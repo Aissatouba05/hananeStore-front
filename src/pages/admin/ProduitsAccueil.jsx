@@ -68,54 +68,89 @@ export default function ProduitsAccueil() {
         <p className="text-rafet-gris">Aucun produit trouvé.</p>
       ) : (
         <div className="bg-white border border-rafet-beige rounded-xl overflow-hidden">
-          <div className="grid grid-cols-[1fr_140px_140px] gap-4 px-6 py-3 bg-rafet-beige/30 text-xs tracking-widest text-rafet-gris">
-            <span>PRODUIT</span>
-            <span className="text-center">VEDETTE</span>
-            <span className="text-center">NOUVEAUTÉ</span>
+          <style>{`
+            .table-scroll::-webkit-scrollbar {
+              height: 8px;
+            }
+            .table-scroll::-webkit-scrollbar-track {
+              background: #f5eeee;
+            }
+            .table-scroll::-webkit-scrollbar-thumb {
+              background: #B76E79;
+              border-radius: 999px;
+            }
+            .table-scroll::-webkit-scrollbar-thumb:hover {
+              background: #9C5561;
+            }
+            .table-scroll {
+              scrollbar-width: thin;
+              scrollbar-color: #B76E79 #f5eeee;
+            }
+            @keyframes glisseIndice {
+              0%, 100% { transform: translateX(0); opacity: 0.6; }
+              50% { transform: translateX(6px); opacity: 1; }
+            }
+          `}</style>
+
+          <div className="flex items-center justify-end gap-2 px-4 pt-3 pb-1 text-[11px] text-rafet-gris md:hidden">
+            <span>Glisse pour voir plus</span>
+            <span className="inline-block animate-[glisseIndice_1.2s_ease-in-out_infinite]">→</span>
           </div>
 
-          {produits.map((produit) => (
-            <div
-              key={produit._id}
-              className="grid grid-cols-[1fr_140px_140px] gap-4 px-6 py-4 items-center border-t border-rafet-beige"
-            >
-              <div className="flex items-center gap-3">
-                <div className="w-12 h-12 rounded-md overflow-hidden bg-rafet-beige flex-shrink-0">
-                  {produit.images?.[0] && (
-                    <img
-                      src={produit.images[0]}
-                      alt={produit.nom}
-                      className="w-full h-full object-cover"
-                    />
-                  )}
+          <div className="relative">
+            <div className="table-scroll overflow-x-auto">
+              <div className="min-w-[460px]">
+                <div className="grid grid-cols-[1fr_220px] gap-4 px-6 py-3 bg-rafet-beige/30 text-xs tracking-widest text-rafet-gris">
+                  <span>PRODUIT</span>
+                  <div className="flex items-center justify-center gap-14">
+                    <span>VEDETTE</span>
+                    <span>NOUVEAUTÉ</span>
+                  </div>
                 </div>
-                <div>
-                  <p className="text-sm text-rafet-noir">{produit.nom}</p>
-                  <p className="text-xs text-rafet-gris">{produit.categorie?.nom}</p>
-                </div>
-              </div>
 
-              <div className="flex justify-center">
-                <input
-                  type="checkbox"
-                  checked={!!produit.misEnAvant}
-                  disabled={enCours === produit._id + 'misEnAvant'}
-                  onChange={() => basculerChamp(produit, 'misEnAvant')}
-                  className="w-4 h-4 accent-rafet-brun cursor-pointer disabled:opacity-50"
-                />
-              </div>
+                {produits.map((produit) => (
+                  <div
+                    key={produit._id}
+                    className="grid grid-cols-[1fr_220px] gap-4 px-6 py-4 items-center border-t border-rafet-beige"
+                  >
+                    <div className="flex items-center gap-3">
+                      <div className="w-12 h-12 rounded-md overflow-hidden bg-rafet-beige flex-shrink-0">
+                        {produit.images?.[0] && (
+                          <img
+                            src={produit.images[0]}
+                            alt={produit.nom}
+                            className="w-full h-full object-cover"
+                          />
+                        )}
+                      </div>
+                      <div>
+                        <p className="text-sm text-rafet-noir whitespace-nowrap">{produit.nom}</p>
+                        <p className="text-xs text-rafet-gris whitespace-nowrap">{produit.categorie?.nom}</p>
+                      </div>
+                    </div>
 
-              <div className="flex justify-center">
-                <input
-                  type="checkbox"
-                  checked={!!produit.nouveaute}
-                  disabled={enCours === produit._id + 'nouveaute'}
-                  onChange={() => basculerChamp(produit, 'nouveaute')}
-                  className="w-4 h-4 accent-rafet-brun cursor-pointer disabled:opacity-50"
-                />
+                    <div className="flex items-center justify-center gap-14">
+                      <input
+                        type="checkbox"
+                        checked={!!produit.misEnAvant}
+                        disabled={enCours === produit._id + 'misEnAvant'}
+                        onChange={() => basculerChamp(produit, 'misEnAvant')}
+                        className="w-4 h-4 accent-rafet-brun cursor-pointer disabled:opacity-50"
+                      />
+                      <input
+                        type="checkbox"
+                        checked={!!produit.nouveaute}
+                        disabled={enCours === produit._id + 'nouveaute'}
+                        onChange={() => basculerChamp(produit, 'nouveaute')}
+                        className="w-4 h-4 accent-rafet-brun cursor-pointer disabled:opacity-50"
+                      />
+                    </div>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
+            <div className="pointer-events-none absolute top-0 right-0 h-full w-8 bg-gradient-to-l from-white to-transparent md:hidden" />
+          </div>
         </div>
       )}
     </AdminLayout>

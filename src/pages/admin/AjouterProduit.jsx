@@ -143,7 +143,7 @@ export default function AjouterProduit() {
           </div>
 
           <div>
-            <label className="text-sm text-rafet-noir mb-2 block">Prix (FCFA)</label>
+            <label className="text-sm text-rafet-noir mb-2 block">Dirame</label>
             <input
               type="number"
               value={prix}

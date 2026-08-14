@@ -48,7 +48,7 @@ export default function Footer() {
             </span>
             <span className="flex items-center gap-2">
               <FontAwesomeIcon icon={faEnvelope} className="text-rafet-brun w-3.5" />
-              contact@hananestore.sn
+              info.hananestore@gmail.com
             </span>
           </div>
         </div>

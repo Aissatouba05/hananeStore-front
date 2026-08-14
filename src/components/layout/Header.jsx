@@ -43,6 +43,16 @@ export default function Header() {
     charger()
   }, [])
 
+  const allerAPropos = (e) => {
+    e.preventDefault()
+    const section = document.getElementById('a-propos')
+    if (section) {
+      section.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      window.location.href = '/#a-propos'
+    }
+  }
+
   return (
     <header className="bg-white shadow-[0_2px_12px_rgba(17,17,17,0.06)] relative z-30">
       <div className="flex items-center justify-between px-4 md:px-8 py-2">
@@ -93,9 +103,13 @@ export default function Header() {
               )}
             </div>
           ))}
-          <Link to="/catalogue?tri=nouveautes" className="uppercase hover:text-rafet-noir transition-colors">
-            Nouveautés
-          </Link>
+          <a
+            href="#a-propos"
+            onClick={allerAPropos}
+            className="uppercase hover:text-rafet-noir transition-colors cursor-pointer"
+          >
+            À propos
+          </a>
         </div>
 
         <button
@@ -188,14 +202,17 @@ export default function Header() {
                 </div>
               )
             })}
-            <Link
-              to="/catalogue?tri=nouveautes"
-              onClick={() => setMenuOuvert(false)}
-              className="font-serif text-2xl text-rafet-noir px-8 py-4 border-b border-black/10 transition-colors duration-200 active:bg-black/5 animate-[menuItemIn_0.4s_cubic-bezier(0.22,1,0.36,1)_backwards]"
+            <a
+              href="#a-propos"
+              onClick={(e) => {
+                allerAPropos(e)
+                setMenuOuvert(false)
+              }}
+              className="font-serif text-2xl text-rafet-noir px-8 py-4 border-b border-black/10 transition-colors duration-200 active:bg-black/5 animate-[menuItemIn_0.4s_cubic-bezier(0.22,1,0.36,1)_backwards] cursor-pointer"
               style={{ animationDelay: `${80 + rayons.length * 70}ms` }}
             >
-              Nouveautés
-            </Link>
+              À propos
+            </a>
           </div>
         </div>
       )}
