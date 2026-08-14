@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { createPortal } from 'react-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faXmark } from '@fortawesome/free-solid-svg-icons'
 
@@ -12,7 +13,7 @@ export default function ModalAccesPrivilegie({ onFermer, onAbonnement }) {
     onAbonnement()
   }
 
-  return (
+  return createPortal(
     <div
       className="fixed inset-0 bg-black/50 z-[100] flex items-center justify-center px-6"
       onClick={onFermer}
@@ -40,18 +41,18 @@ export default function ModalAccesPrivilegie({ onFermer, onAbonnement }) {
           découvrir nos nouvelles collections et offres exclusives.
         </p>
 
-        <form onSubmit={handleSubmit} className="flex max-w-sm mx-auto border border-rafet-beige">
+        <form onSubmit={handleSubmit} className="flex flex-col sm:flex-row max-w-sm mx-auto border border-rafet-beige rounded-md sm:rounded-none overflow-hidden">
           <input
             type="email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             placeholder="Votre adresse e-mail"
             required
-            className="flex-1 bg-transparent text-rafet-noir placeholder-rafet-gris text-sm px-4 py-3 outline-none"
+            className="flex-1 min-w-0 bg-transparent text-rafet-noir placeholder-rafet-gris text-sm px-4 py-3 outline-none"
           />
           <button
             type="submit"
-            className="text-white text-xs tracking-widest px-6 transition-colors"
+            className="text-white text-xs tracking-widest px-6 py-3 sm:py-0 transition-colors whitespace-nowrap"
             style={{ backgroundColor: '#B76E79' }}
           >
             S'ABONNER
@@ -62,6 +63,7 @@ export default function ModalAccesPrivilegie({ onFermer, onAbonnement }) {
           Aucun spam. Désabonnement possible à tout moment.
         </p>
       </div>
-    </div>
+    </div>,
+    document.body
   )
 }

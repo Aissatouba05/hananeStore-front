@@ -48,3 +48,12 @@ body {
 .animate-ken-burns {
   animation: kenBurns 8s ease-in-out infinite;
 }
+
+@keyframes whatsappZoom {
+  0%, 100% { transform: scale(1); }
+  50% { transform: scale(1.12); }
+}
+
+.animate-whatsapp-zoom {
+  animation: whatsappZoom 1.8s ease-in-out infinite;
+}

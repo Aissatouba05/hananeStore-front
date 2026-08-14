@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react'
 import Header from './Header'
 import Footer from './Footer'
+import WhatsAppFloat from '../ui/WhatsAppFloat'
 
 export default function Layout({ children }) {
   const headerRef = useRef(null)
@@ -26,6 +27,7 @@ export default function Layout({ children }) {
         {children}
       </main>
       <Footer />
+      <WhatsAppFloat />
     </div>
   )
 }

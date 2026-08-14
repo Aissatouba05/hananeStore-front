@@ -7,19 +7,19 @@ import img3 from "../../assets/img1.png";
 const rayons = [
   {
     label: 'Femme',
-    accroche: 'Élégance au quotidien',
+    // accroche: 'Élégance au quotidien',
     lien: '/catalogue?rayon=femme',
     image: img1,
   },
   {
     label: 'Homme',
-    accroche: 'Style affirmé',
+    // accroche: 'Style affirmé',
     lien: '/catalogue?rayon=homme',
     image: img2,
   },
   {
     label: 'Enfants',
-    accroche: 'Petites merveilles',
+    // accroche: 'Petites merveilles',
     lien: '/catalogue?rayon=enfants',
     image: img3,
   },
@@ -88,7 +88,7 @@ export default function CategoriesRayon() {
     <section className="px-6 md:px-12 py-14">
       <div className="text-center mb-10">
         <span className="text-[11px] tracking-[3px] text-rafet-gris">EXPLOREZ</span>
-        <h2 className="font-serif text-2xl md:text-3xl text-rafet-noir mt-1">Une boutique pour chacun</h2>
+        {/* <h2 className="font-serif text-2xl md:text-3xl text-rafet-noir mt-1">Une boutique pour chacun</h2> */}
       </div>
 
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">

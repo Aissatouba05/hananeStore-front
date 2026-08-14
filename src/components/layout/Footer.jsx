@@ -40,11 +40,11 @@ export default function Footer() {
           <div className="flex flex-col gap-2 text-sm text-rafet-gris items-center md:items-start">
             <span className="flex items-center gap-2">
               <FontAwesomeIcon icon={faLocationDot} className="text-rafet-brun w-3.5" />
-              Dakar, Sénégal
+              Maroc, Casa
             </span>
             <span className="flex items-center gap-2">
               <FontAwesomeIcon icon={faPhone} className="text-rafet-brun w-3.5" />
-              +221 XX XXX XX XX
+              +212 614 019 717
             </span>
             <span className="flex items-center gap-2">
               <FontAwesomeIcon icon={faEnvelope} className="text-rafet-brun w-3.5" />

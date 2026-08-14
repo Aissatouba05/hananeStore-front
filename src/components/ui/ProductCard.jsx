@@ -76,7 +76,7 @@ export default function ProductCard({ produit, taille = 'normal', delai = 0 }) {
         >
           <FontAwesomeIcon
             icon={faHeart}
-            className={`text-xs transition-colors duration-200 ${favori ? 'text-[#B76E79] animate-pop' : 'text-[#111111]/40'}`}
+            className={`text-lg transition-colors duration-200 ${favori ? 'text-[#B76E79] animate-pop' : 'text-[#111111]/40'}`}
           />
         </button>
       </Link>
