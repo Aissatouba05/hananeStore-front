@@ -33,7 +33,7 @@ export default function NewArrivals() {
   if (chargement || produits.length === 0) return null
 
   return (
-    <section className="px-6 md:px-12 py-14 bg-rafet-beige/30">
+    <section className="px-6 md:px-12 py-14 bg-[#C98A94]/[0.06]">
       <div className="flex items-center justify-between mb-8">
         <h2 className="font-serif text-2xl text-rafet-noir">Nouveautés</h2>
         <div className="flex gap-3">
