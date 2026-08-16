@@ -113,12 +113,12 @@ export default function ProductCard({ produit, taille = 'normal', delai = 0 }) {
       <div className="pt-3 px-1">
         <p className="text-sm text-[#111111] font-medium mb-1">{produit.nom}</p>
 
-        <div className="flex items-baseline gap-2 mb-3">
+        <div className="flex items-baseline justify-between mb-3">
           <p className={`text-sm ${enPromo ? 'text-[#B76E79] font-semibold' : 'text-[#B76E79]'}`}>
             {produit.prix.toLocaleString('fr-FR')} FCFA
           </p>
           {enPromo && (
-            <p className="text-xs text-[#111111]/40 line-through">
+            <p className="text-xs text-[#111111] line-through">
               {produit.prixAncien.toLocaleString('fr-FR')} FCFA
             </p>
           )}
