@@ -120,6 +120,7 @@ export default function Catalogue() {
                 id: produit._id,
                 nom: produit.nom,
                 prix: produit.prix,
+                prixAncien: produit.prixAncien,
                 badge: produit.badge,
                 image: produit.images?.[0],
               }}

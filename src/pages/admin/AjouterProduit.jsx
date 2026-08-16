@@ -23,6 +23,7 @@ export default function AjouterProduit() {
   const [nom, setNom] = useState('')
   const [description, setDescription] = useState('')
   const [prix, setPrix] = useState('')
+  const [prixAncien, setPrixAncien] = useState('')
   const [categorie, setCategorie] = useState('')
   const [badge, setBadge] = useState('')
   const [images, setImages] = useState([])
@@ -49,7 +50,6 @@ export default function AjouterProduit() {
     charger()
   }, [])
 
-  // Quand le rayon change, on sélectionne automatiquement sa première catégorie
   useEffect(() => {
     const catsDuRayon = categoriesParRayon[rayonChoisi]
     if (catsDuRayon && catsDuRayon.length > 0) {
@@ -76,6 +76,12 @@ export default function AjouterProduit() {
   const handleSubmit = async (e) => {
     e.preventDefault()
     setErreur(null)
+
+    if (prixAncien && Number(prixAncien) <= Number(prix)) {
+      setErreur("L'ancien prix doit être supérieur au prix actuel.")
+      return
+    }
+
     setEnvoiEnCours(true)
 
     try {
@@ -83,6 +89,7 @@ export default function AjouterProduit() {
       formData.append('nom', nom)
       formData.append('description', description)
       formData.append('prix', prix)
+      if (prixAncien) formData.append('prixAncien', prixAncien)
       formData.append('categorie', categorie)
       if (badge) formData.append('badge', badge)
 
@@ -142,16 +149,35 @@ export default function AjouterProduit() {
             />
           </div>
 
-          <div>
-            <label className="text-sm text-rafet-noir mb-2 block">Dirame</label>
-            <input
-              type="number"
-              value={prix}
-              onChange={(e) => setPrix(e.target.value)}
-              required
-              className="w-full border border-rafet-beige px-4 py-3 text-sm outline-none focus:border-rafet-brun rounded-md"
-            />
+          <div className="grid grid-cols-2 gap-4">
+            <div>
+              <label className="text-sm text-rafet-noir mb-2 block">Prix (FCFA)</label>
+              <input
+                type="number"
+                value={prix}
+                onChange={(e) => setPrix(e.target.value)}
+                required
+                className="w-full border border-rafet-beige px-4 py-3 text-sm outline-none focus:border-rafet-brun rounded-md"
+              />
+            </div>
+
+            <div>
+              <label className="text-sm text-rafet-noir mb-2 block">
+                Ancien prix (optionnel)
+              </label>
+              <input
+                type="number"
+                value={prixAncien}
+                onChange={(e) => setPrixAncien(e.target.value)}
+                placeholder="Laisser vide si pas de promo"
+                className="w-full border border-rafet-beige px-4 py-3 text-sm outline-none focus:border-rafet-brun rounded-md"
+              />
+            </div>
           </div>
+          <p className="text-xs text-rafet-gris -mt-3">
+            Si tu renseignes un ancien prix, le produit affichera un prix barré et un badge
+            de réduction automatiquement calculé.
+          </p>
 
           <div className="grid grid-cols-2 gap-4">
             <div>
